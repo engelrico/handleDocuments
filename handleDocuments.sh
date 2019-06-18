@@ -17,7 +17,10 @@ semaphore=$folder_root"handleDocuments.LOCK"
 folder_scan=$folder_root"00_scan"
 folder_ocr=$folder_root"10_ocr"
 folder_ready=$folder_root"20_ready"
-folder_target="/media/cloud/public/docs/010_scans/"
+#folder_target="/media/cloud/public/docs/010_scans/"
+folder_target="/media/data/docs/010_scans/"
+folder_cloud="/media/cloud/public/docs/010_scans/"
+
 #--------------------------------------------------------------
 
 #--------------------------------------------------------------
@@ -35,7 +38,7 @@ touch $semaphore
 $folder_this/uniqFileName.sh $folder_scan $folder_ocr
 # ocr the files to make them searchable
 $folder_this/ocrDocument.sh $folder_ocr $folder_ready
-# move the files to the cloud
+# move the files to the targetFolder
 for fileEntry in $folder_ready/*.pdf
 do
   if [ -f "$fileEntry" ]; then
@@ -44,7 +47,8 @@ do
   fi
 done
 
-
+#sync to the cloud
+rsync --delete -a $folder_target $folder_cloud
 # idea: put the results as pushNotifications to the smartphone
 # release the semaphore
 rm $semaphore
