@@ -43,13 +43,15 @@ for fileEntry in $folder_ready/*.pdf
 do
   if [ -f "$fileEntry" ]; then
     echo "move $fileEntry"
+    cp -f $fileEntry $folder_cloud
     mv -f $fileEntry $folder_target
   fi
 done
 
 #sync to the cloud
-rsync --delete -a $folder_target $folder_cloud
+echo "sync $folder_target to $folder_cloud"
+# idea: later or hourly rsync --delete -a -e ssh $folder_target $folder_cloud
 # idea: put the results as pushNotifications to the smartphone
 # release the semaphore
-rm $semaphore
+rm -f $semaphore
 #--------------------------------------------------------------
